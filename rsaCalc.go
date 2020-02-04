@@ -1,13 +1,13 @@
 package main
 
 import (
-    "crypto/rand"
+	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto"
 	"time"
-    "fmt"
-    "os"
+	"fmt"
+	"os"
    )  
   
 func rsaCalc(){
@@ -44,11 +44,11 @@ func rsaCalc(){
 	hash := sha256.New()
 
 	ciphertext, error := rsa.EncryptOAEP(
-	    hash,
-	    rand.Reader,
-	    keyPubB,
-	    message,
-	    label)
+		hash,
+		rand.Reader,
+		keyPubB,
+		message,
+		label)
 
 	if error != nil{
 	  fmt.Println( error.Error )
@@ -67,11 +67,11 @@ func rsaCalc(){
 	hashed := pssh.Sum( nil )
 
 	signature, error := rsa.SignPSS(
-	    rand.Reader,
-	    keyPrivA,
-	    newhash,
-	    hashed,
-	    &opts)
+		rand.Reader,
+		keyPrivA,
+		newhash,
+		hashed,
+		&opts)
 
 	if error != nil{
 	  fmt.Println( error.Error )
@@ -82,11 +82,11 @@ func rsaCalc(){
 
 	// Decrypting
 	plaintext, error := rsa.DecryptOAEP(
-	    hash,
-	    rand.Reader,
-	    keyPrivB,
-	    ciphertext,
-	    label)
+		hash,
+		rand.Reader,
+		keyPrivB,
+		ciphertext,
+		label)
 
 	if error != nil{
 	  fmt.Println( error.Error )
@@ -97,23 +97,23 @@ func rsaCalc(){
 
 	// Signature verification
 	error = rsa.VerifyPSS(
-        keyPubA,
-        newhash,
-        hashed,
-        signature,
-        &opts)
+		keyPubA,
+		newhash,
+		hashed,
+		signature,
+		&opts)
 
-    if error != nil{
-        fmt.Println( "Verify signature failed" )
-        os.Exit( 1 )
+	if error != nil{
+		fmt.Println( "Verify signature failed" )
+		os.Exit( 1 )
 	}
 
-    fmt.Println( "Verify signature successful" )
+	fmt.Println( "Verify signature successful" )
 }
 
 func main() {
 	t0 := time.Now()
 	rsaCalc()
 	t1 := time.Now()
-    fmt.Printf( "RSA calculations took %v to run.\n", t1.Sub( t0 ) )
+	fmt.Printf( "RSA calculations took %v to run.\n", t1.Sub( t0 ) )
 }
