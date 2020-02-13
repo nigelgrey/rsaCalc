@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdint.h>
-#include <math.h>
 
 int main( void )
 {
@@ -9,24 +8,26 @@ int main( void )
 	uint32_t calcE( uint32_t phi );
 	uint32_t modInverse( uint32_t d, uint32_t e );
 	uint64_t modExp( uint32_t A, uint32_t n, uint32_t m );
+	uint64_t fastExp( uint32_t x, uint32_t n, uint32_t mod );
 
-	uint64_t n, phi, e, d, plaintext, ciphertext = 0;
+	uint32_t n, phi, e, d;
 	uint32_t p, q;
+	uint64_t plaintext, ciphertext, decrypted;
 
-	printf( "Enter a prime integer p: ");
+	printf( "Enter a prime integer greater than 79 -> p: ");
 	scanf( "%d", &p);
 
-	while( isPrime( p ) == 0 )
+	while( !isPrime( p ) )
 	{
 		printf( "%d is not prime.\n", p );
 		printf( "Enter a prime integer p: ");
 		scanf( "%d", &p);
 	}
 
-	printf( "Enter another prime integer q: ");
+	printf( "Enter another prime integer greater than 79 -> q: ");
 	scanf( "%d", &q);
 
-	while( isPrime( q ) == 0 )
+	while( !isPrime( q ) )
 	{
 		printf( "%d is not prime.\n", q );
 		printf( "Enter a prime integer q: ");
@@ -35,35 +36,36 @@ int main( void )
 
 	n = p * q;
 
-	printf( "For p = %d and q = %d, n = %lu\n", p, q, n );
+	printf( "For p = %d and q = %d, n = %u\n", p, q, n );
 
 	phi = ( p - 1 ) * ( q - 1 );
 
-	printf( "phi(n) = %lu\n", phi);
+	printf( "phi(n) = %u\n", phi);
 
 	e = calcE( phi );
 
-	printf( "e = %lu\n", e );
+	printf( "e = %u\n", e );
 
 	d = modInverse( e, phi );
 
-	printf( "d = %lu\n", d );
+	printf( "d = %u\n", d );
 
-    plaintext = 400;
+	printf( "Enter plaintext greater than 1000 -> P: ");
+	scanf( "%lu", &plaintext);
 
 	printf( "P = %lu\n", plaintext );
 
 	printf( "Encrypting P...\n");
 
-    ciphertext = modExp( plaintext, e, n );
+	ciphertext = modExp( plaintext, e, n );
 
 	printf( "C = %lu\n", ciphertext );
 
 	printf( "Decrypting C...\n");
 
-	plaintext = modExp( ciphertext, d, n );
+	decrypted = modExp( ciphertext, d, n );
 
-	printf( "Found P = %lu\n", plaintext );
+	printf( "Found P = %lu\n", decrypted );
 }
 
 uint32_t isPrime( uint32_t number )
@@ -129,23 +131,23 @@ uint32_t modInverse( uint32_t e, uint32_t phi )
 	return 0;
 }
 
-uint64_t modExp( uint32_t A, uint32_t n, uint32_t m )
+uint64_t modExp( uint32_t base, uint32_t exp, uint32_t mod )
 {
 	uint64_t result = 1;
-	unsigned long long a = A;
-
-	a = a % m;
-
-	while( n > 0 )
+	if( mod == 1 )
 	{
-		if( n & 1 )
-		{
-			result = ( ( result % m ) * ( a % m) ) % m;
-		}
-		n = n >> 1;
-    // TODO fix so this can work with large ints
-		a = ( ( a % m ) * ( a % m ) ) % m;
+		return 0;
 	}
-
+	base = base % mod;
+	while( exp > 0 )
+	{
+		if( exp % 2 == 1 )
+		{
+			result = ( result * base ) % mod;
+		}
+		exp = exp >> 1;
+		base = ( base * base ) % mod;
+	}
 	return result;
 }
+
