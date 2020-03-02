@@ -1,0 +1,137 @@
+% Created 2020-03-01 Sun 10:19
+% Intended LaTeX compiler: pdflatex
+\documentclass[presentation]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{multimedia}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{listings}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usetheme{default}
+\author{Nigel Grey}
+\date{\today}
+\title{RSA Exploration}
+\begin{document}
+
+\maketitle
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+\section{RSA Overview}
+\subsection{Introduction}
+\begin{frame}{RSA Overview}{Things You May Already Know \ldots}
+  \begin{itemize}
+    \item The Rivest-Shamir-Adleman algorithm is the most widely used asymmetric
+      cryptographic scheme
+      \pause
+    \item Common applications include:
+      \begin{itemize}
+        \item Key transport
+        \item Digital signatures
+      \end{itemize}
+      \pause
+    \item Central concept: \textbf{Multiplying two large prime numbers is easy,
+      but factoring the result is very hard!}
+  \end{itemize}
+\end{frame}
+\subsection{Key Generation}
+\begin{frame}{RSA Overview}{Key Generation Procedure}
+  \begin{enumerate}
+    \item Select two large prime numbers $p$ and $q$
+      \pause
+    \item Calculate $n=p*q$
+      \pause
+    \item Calculate $\phi(n)=(p-1)(q-1)$
+      \pause
+    \item Find $e$ (the ``public exponent'') $e \in \{1,2,\ldots,\phi(n)-1\}
+      \mid gcd(e,\phi(n))=1$
+      \pause
+    \item Calculate the private key $d \mid d*e \equiv 1\mod(\phi(n))$
+  \end{enumerate}
+\end{frame}
+\subsection{Encryption/Decryption}
+\begin{frame}{RSA Overview}{Encryption/Decryption}
+  \begin{itemize}
+    \item \textbf{Encryption:} Given the public key $(n,e)=k_{pub}$ and some plaintext $x$ the RSA
+      encryption function is defined as: \\ $y \equiv x^{e}\mod n \mid x,y \in \mathbb{Z}_{n}$
+      \pause
+    \item \textbf{Decryption:} Given the private key $d=k_{priv}$ and the
+      ciphertext $y$ the decryption function is: \\ $x \equiv y^{d} \mod n \mid x,y \in \mathbb{Z}_{n}$
+  \end{itemize}
+\end{frame}
+\section{C Implementation}
+\subsection{An Impractical Example}
+\begin{frame}{C Implementation}{An Impractical Example}
+  \begin{center}
+    \movie[ poster, externalviewer]{\includegraphics[width=0.7\textwidth]{image.png}}{cExample.mp4}
+  \end{center}
+\end{frame}
+\begin{frame}{C Implementation}{Problems}
+  \begin{itemize}
+    \item RSA encryption is deterministic
+      \pause
+    \item Small values of $e$ and $x$ are vulnerable to attacks if no
+      padding is used
+      \pause
+    \item Plaintext $x=-1,0,1$ map to ciphertext $y=-1,0,1$
+      \pause
+    \item RSA is malleable (i.e. an attacker could transform the
+      ciphertext)
+  \end{itemize}
+\end{frame}
+\section{Go Implementation}
+\subsection{Solving Problems}
+\begin{frame}{Go Implementation}{Solving Problems}
+  \begin{itemize}
+    \item Add a padding scheme to solve most of the problems from the
+      previous slide i.e. Optimal Asymmetric Encryption Padding (OAEP) as
+      defined in the Public Key Cryptography Standard
+      \pause
+    \item Add a SHA-256 hash function for digital signature
+      \pause
+    \item Use 2048-bit keys, which should be secure for the next 10
+      years or so \ldots
+  \end{itemize}
+\end{frame}
+\subsection{A Practical Example}
+\begin{frame}{Go Implementation}{A More Practical Example}
+  \begin{center}
+    \movie[ poster, externalviewer]{\includegraphics[width=0.7\textwidth]{image2.png}}{goExample.mp4}
+  \end{center}
+\end{frame}
+\section{Conclusion}
+\begin{frame}{Conclusion}
+  \begin{itemize}
+    \item When working at a lower level, the RSA algorithm can be difficult to
+      implement in a secure manner due to large bit length requirements of $n$,
+      $e$, and $d$
+      \pause
+    \item Higher level languages can offer powerful libraries that allow for
+      simple, practical RSA implementation
+      \pause
+    \item Though hardware-based cryptographic schemes appear to be the most
+      exciting and future-proof alternatives, and will be the focus of my next
+      presentation!
+      \pause
+    \item All code can be viewed on my Github, user name is: \textit{nigelgrey}
+      \pause
+    \item Along with our class slides, Christof Par and Jan Pelzl's
+      \textit{Understanding Cryptography} served as my additional resource for
+      this exploration
+  \end{itemize}
+\end{frame}
+\begin{frame}{Conclusion}
+  \begin{itemize}
+      \item Thank You! What questions do you have?
+      \end{itemize}
+\end{frame}
+\end{document}

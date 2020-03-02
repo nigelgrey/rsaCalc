@@ -14,25 +14,8 @@ int main( void )
 	uint32_t p, q;
 	uint64_t plaintext, ciphertext, decrypted;
 
-	printf( "Enter a prime integer greater than 79 -> p: ");
-	scanf( "%d", &p);
-
-	while( !isPrime( p ) )
-	{
-		printf( "%d is not prime.\n", p );
-		printf( "Enter a prime integer p: ");
-		scanf( "%d", &p);
-	}
-
-	printf( "Enter another prime integer greater than 79 -> q: ");
-	scanf( "%d", &q);
-
-	while( !isPrime( q ) )
-	{
-		printf( "%d is not prime.\n", q );
-		printf( "Enter a prime integer q: ");
-		scanf( "%d", &q);
-	}
+	p = 83;
+	q = 97;
 
 	n = p * q;
 
@@ -50,8 +33,7 @@ int main( void )
 
 	printf( "d = %u\n", d );
 
-	printf( "Enter plaintext greater than 1000 -> P: ");
-	scanf( "%lu", &plaintext);
+	plaintext = 202020;
 
 	printf( "P = %lu\n", plaintext );
 

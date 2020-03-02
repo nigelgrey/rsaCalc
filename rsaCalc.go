@@ -34,12 +34,16 @@ func rsaCalc(){
 	keyPubB := &keyPrivB.PublicKey
 
 	fmt.Println( "Private key A: ", *keyPrivA )
+	fmt.Println()
 	fmt.Println( "Public key A: ", keyPubA )
+	fmt.Println()
 	fmt.Println( "Private key B: ", *keyPrivB )
+	fmt.Println()
 	fmt.Println( "Public key B: ", keyPubB )
+	fmt.Println()
 
 	// Encryption
-	message := []byte("This is the secret message...")
+	message := []byte("The MBCFET is similar to the FinFET in it's topology, where a large area of gate-to-channel contact allows for a very small channel length.")
 	label := []byte("")
 	hash := sha256.New()
 
@@ -56,6 +60,7 @@ func rsaCalc(){
 	}
 
 	fmt.Printf( "Encrypted %s as:\n%x\n", string( message ), ciphertext )
+	fmt.Println()
 
 	// Signing
 	var opts rsa.PSSOptions
@@ -79,6 +84,7 @@ func rsaCalc(){
 	}
 
 	fmt.Printf( "PSS signature: %x\n", signature )
+	fmt.Println()
 
 	// Decrypting
 	plaintext, error := rsa.DecryptOAEP(
@@ -94,6 +100,7 @@ func rsaCalc(){
 	}
 
 	fmt.Printf( "Decrypted %x as:\n%s\n",  ciphertext, plaintext )
+	fmt.Println()
 
 	// Signature verification
 	error = rsa.VerifyPSS(
